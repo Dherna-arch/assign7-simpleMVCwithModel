@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS assignDB;
 DROP USER IF EXISTS 'assignDBuser'@'localhost';
 CREATE DATABASE assignDB;
 USE assignDB;
-
+--- lines 3 and 6 contain the info to connect the db to the js file
 CREATE USER 'assignDBuser'@'localhost' identified BY 'assignDBpass';
 GRANT all ON assignDB.* TO 'assignDBuser'@'localhost';
 

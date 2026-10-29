@@ -1,27 +1,41 @@
-// Simulated database
-const users = [
-  { "id": 1, "fname": "Jim", "lname": "Smith", "username": "jsmith" },
-  { "id": 2, "fname": "Jack", "lname": "Kennedy", "username": "jkennedy" },
-  { "id": 3, "fname": "Linda", "lname": "Nelson", "username": "lnelson" },
-  { "id": 4, "fname": "Kayli", "lname": "Williams", "username": "kwilliams" },
-  { "id": 5, "fname": "Seth", "lname": "Walters", "username": "swalters" },
-  { "id": 6, "fname": "Brandon", "lname": "Jones", "username": "bjones" },
-  { "id": 7, "fname": "Ally", "lname": "Smith", "username": "asmith" },
-  { "id": 8, "fname": "Jordan", "lname": "Wilson", "username": "jwilson" }
-];
+//getting the client
+const mysql = require('mysql2');
 
-function getUsers(callback) {
-  setTimeout(function () {
-    callback(users);
-  }, 1000);
+//creating teh connection to the database
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'assignDBuser',
+  password: 'assignDBpass',
+  database: 'assignDB',//all of these values come form assignDB.sql lines 3 and 6
+  //rowsAsArray: true,//*useful if you want to get results as an array rather than an object to preven thtem from clashing
+});//inputtin the values into the connection establish the actaul connection
+
+function getUsers(callback) {//the simulated database in this file
+  connection.execute('SELECT * FROM `users`', function(err, results){
+    //console.log("using getUser");
+    callback(results);
+  });
 }
 
 function addUser(user, callback) {
-  setTimeout(function () {
-    user.id = users.length + 1;
-    users.push(user);
-    callback(user);
-  }, 500);
-}
+//see what order to pas values in 
+//array of values
+//they com ein an array
+//object.values
+
+  const sql = 'INSERT INTO `users` (`fname`, `lname`, `username`, `passwd`) VALUES (?,?,?,?)';
+  const values = Object.values(user);// takes the values from the json object
+  console.log("logging values" + values);
+
+  connection.execute(sql, values, (err, result) =>{
+    //console.log("using addUser");
+    if(err instanceof Error){
+    console.log(err);
+    return;
+  }
+    //console.log(result);
+    callback(result);
+  })
+};
 
 module.exports = { getUsers, addUser };
